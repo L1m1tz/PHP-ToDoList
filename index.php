@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+
+require_once 'app/init.php';
+
+$itemsQuery = $pdo->prepare("
+    SELECT *
+    FROM items
+");
+
+$itemsQuery->execute();
+
+$items = $itemsQuery->rowCount() ? $itemsQuery : [];
+
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,15 +35,20 @@
     <div class="list">
         <h1 class="header"> To do.</h1>
 
-        <ul class="items">
-            <li>
-                <span class="item"> Pick up shopping </span>
-                <a href="#" class="done-button">Mark as done</a>
-            </li>
-            <li>
-                <span class="item done">Learn php</span>
-            </li>
-        </ul>
+        <?php if (!empty($items)) : ?>
+            <ul class="items">
+                <?php foreach ($items as $item) : ?>
+                    <li>
+                        <span class="item <?php echo $item['done'] ? 'done' : ' ' ?>"> <?php echo $item['name']; ?> </span>
+                        <?php if (! $item['done']) : ?>
+                            <a href="mark.php?as=done&item=<?php echo $item['id']; ?>" class="done-button">Mark as done</a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else : ?>
+            <p> You haven't added any items yet</p>
+        <?php endif; ?>
 
         <form class="item-add" action="add.php" method="post">
             <input type="text" name="name" placeholder="Type a new item" class="input" autocomplete="off" required>
