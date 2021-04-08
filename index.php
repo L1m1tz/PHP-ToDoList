@@ -4,6 +4,7 @@
 <?php
 
 require_once 'app/init.php';
+include_once 'head.php';
 
 function dd($var)
 {
@@ -31,7 +32,10 @@ $stmt->execute();
 
 $total = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['TOTAL'];
 
-$percentage = ($done/$total)*100;
+$value= ($done/$total)*100;
+$percentage = round($value, 2);
+
+
 
 
 // $nameTotal = intval($countName);
@@ -41,24 +45,6 @@ $percentage = ($done/$total)*100;
 $items = $itemsQuery->rowCount() ? $itemsQuery : [];
 
 ?>
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    </link>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>To do</title>
-</head>
-
 <body>
     <div class="list">
         <h1 class="header"> To do.</h1>
@@ -70,11 +56,14 @@ $items = $itemsQuery->rowCount() ? $itemsQuery : [];
             <ul class="items">
                 <?php foreach ($items as $item) : ?>
                     <li>
-                        <span class="item <?php echo $item['status_id'] == 2 ? 'done' : ' ' ?>"> <?php echo $item['name']; ?> </span>
+                        <span class="item <?php echo $item['status_id'] == 2 ? 'done' : ' ' ?> p-2"> <?php echo $item['name']; ?>  </span>
 
                         <?php if ($item['status_id'] == 1) : ?>
                             <a href="mark.php?as=done&item=<?php echo $item['id']; ?>" class="done-button">Mark as done</a>
                         <?php endif; ?>
+                        <?php if ($item): ?>
+                            <button type="button" class="btn btn-danger p-1"><a href="delete.php?id=<?php echo $item['id']; ?>" class="delete"> Delete</a></button>
+                        <?php endif;?>
                     </li>
                 <?php endforeach; ?>
             </ul>
