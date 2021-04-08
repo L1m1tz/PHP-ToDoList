@@ -6,7 +6,7 @@
     $as = $_GET['as'];
     $item = $_GET['item'];
     $sql = "UPDATE items 
-            SET done = 1
+            SET status_id = 2
             WHERE ID = :item";
 
     switch($as) {
